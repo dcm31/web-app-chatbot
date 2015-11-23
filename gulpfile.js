@@ -14,21 +14,17 @@ var pkg = require('./package');
 var karma = require('karma').server;
 var del = require('del');
 var _ = require('lodash');
+var bump = require('gulp-bump');
+var git = require('gulp-git');
+var tag = require('gulp-tag-version');
+var rename = require('gulp-rename');
+var spawn = require('child_process').spawn;
 /* jshint camelcase:false*/
 var webdriverStandalone = require('gulp-protractor').webdriver_standalone;
 var webdriverUpdate = require('gulp-protractor').webdriver_update;
 
 //update webdriver if necessary, this task will be used by e2e task
 gulp.task('webdriver:update', webdriverUpdate);
-
-// run unit tests and watch files
-gulp.task('tdd', function(cb) {
-  karma.start(_.assign({}, karmaConfig, {
-    singleRun: false,
-    action: 'watch',
-    browsers: ['PhantomJS']
-  }), cb);
-});
 
 // run unit tests with travis CI
 gulp.task('travis', ['build'], function(cb) {
@@ -81,12 +77,12 @@ gulp.task('sass', function() {
 
 //build files for creating a dist release
 gulp.task('build:dist', ['clean'], function(cb) {
-  runSequence(['jshint', 'build', 'copy', 'copy:assets', 'images', 'test:unit'], 'html', cb);
+  runSequence('jshint', 'build', 'test:unit', ['copy', 'copy:assets', 'images'], 'html', cb);
 });
 
 //build files for development
 gulp.task('build', ['clean'], function(cb) {
-  runSequence(['sass', 'templates', 'browserify'], cb);
+  runSequence(['constants', 'sass', 'templates', 'browserify'], cb);
 });
 
 //generate a minified css files, 2 js file, change theirs name to be unique, and generate sourcemaps
@@ -97,7 +93,6 @@ gulp.task('html', function() {
 
   return gulp.src(config.index)
     .pipe(assets)
-    .pipe($.sourcemaps.init())
     .pipe($.if('**/*main.js', $.ngAnnotate()))
     .pipe($.if('*.js', $.uglify({
       mangle: false,
@@ -113,7 +108,6 @@ gulp.task('html', function() {
     .pipe($.if('*.html', $.minifyHtml({
       empty: true
     })))
-    .pipe($.sourcemaps.write())
     .pipe(gulp.dest(config.dist))
     .pipe($.size({
       title: 'html'
@@ -149,13 +143,34 @@ gulp.task('clean', del.bind(null, [config.dist, config.tmp]));
 //lint files
 gulp.task('jshint', function() {
   return gulp.src(config.js)
-    .pipe(reload({
-      stream: true,
-      once: true
-    }))
     .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'))
     .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+});
+
+gulp.task('constants', function() {
+  return $.ngConstant({
+      name: 'constants',
+      constants: {
+        GET_RENT_ZESTIMATE_PORT: process.env.GET_RENT_ZESTIMATE_PORT,
+        END_POINTS_HOST: process.env.END_POINTS_HOST,
+        FIREBASE_URL: process.env.FIREBASE_URL,
+        AMAZON_S3_PUBLIC_BUCKET: process.env.AMAZON_S3_PUBLIC_BUCKET,
+        AMAZON_S3_PUBLIC_ACCESS_KEY: process.env.AMAZON_S3_PUBLIC_ACCESS_KEY,
+        AMAZON_S3_PUBLIC_SECRET_KEY: process.env.AMAZON_S3_PUBLIC_SECRET_KEY,
+        STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
+        IP_SERVER_PORT: process.env.IP_SERVER_PORT,
+        SECURE_UPLOAD_SERVER_ENDPOINT: process.env.SECURE_UPLOAD_SERVER_ENDPOINT,
+        PENDING_PROPERTY_CUTOFF: process.env.PENDING_PROPERTY_CUTOFF,
+        BASE_URL: process.env.BASE_URL,
+        TIMEZONE_OFFSET: 300 // EST
+      },
+      stream: true
+    })
+    .pipe(gulp.dest(config.tmp))
+    .pipe($.size({
+      title: 'constants'
+    }));
 });
 
 /* tasks supposed to be public */
@@ -165,7 +180,7 @@ gulp.task('jshint', function() {
 gulp.task('default', ['serve']); //
 
 //run unit tests and exit
-gulp.task('test:unit', ['build'], function(cb) {
+gulp.task('test:unit', function(cb) {
   karma.start(_.assign({}, karmaConfig, {
     singleRun: true
   }), cb);
@@ -183,8 +198,8 @@ gulp.task('test:e2e', ['webdriver:update'], function() {
 });
 
 //run the server,  watch for file changes and redo tests.
-gulp.task('serve:tdd', function(cb) {
-  runSequence(['serve', 'tdd'], cb);
+gulp.task('tdd', function(cb) {
+  gulp.watch(config.js, ['test:unit']);
 });
 
 //run the server after having built generated files, and watch for changes
@@ -202,6 +217,12 @@ gulp.task('serve', ['build'], function() {
   gulp.watch(config.assets, reload);
 });
 
+//run the server,  watch for file changes and autorun tests.
+gulp.task('tdd', function() {
+  gulp.watch(config.js, ['test:unit']);
+});
+
+
 //run the app packed in the dist folder
 gulp.task('serve:dist', ['build:dist'], function() {
   browserSync({
@@ -210,12 +231,59 @@ gulp.task('serve:dist', ['build:dist'], function() {
   });
 });
 
-gulp.task('browserify', function () {
+gulp.task('browserify', function() {
   var browserified = transform(function(filename) {
     var b = browserify(filename);
     return b.bundle();
   });
   return gulp.src(['./client/src/**/*.js', '!./client/src/vendor/**/*.js'])
-   .pipe(browserified)
-   .pipe(gulp.dest(config.tmp));
+    .pipe($.plumber())
+    .pipe(browserified)
+    .pipe(gulp.dest(config.tmp))
+});
+
+function updateVersionNumber(type) {
+  return gulp.src(['./package.json'])
+    .pipe(bump({
+      type: type
+    }))
+    .pipe(gulp.dest('./'))
+    .pipe(git.commit('chore(version): ' + type))
+    .pipe(tag({
+      prefix: ''
+    }));
+}
+
+gulp.task('bump:patch', function() {
+  return updateVersionNumber('patch');
+})
+gulp.task('bump:minor', function() {
+  return updateVersionNumber('minor');
+})
+gulp.task('bump:major', function() {
+  return updateVersionNumber('major');
+})
+
+gulp.task('new:component', function() {
+  spawn('yo', [
+    'le-directive'
+  ], {
+    stdio: 'inherit'
+  });
+});
+
+gulp.task('new:service', function() {
+  spawn('yo', [
+    'le-factory'
+  ], {
+    stdio: 'inherit'
+  });
+});
+
+gulp.task('new:page', function() {
+  spawn('yo', [
+    'le-page'
+  ], {
+    stdio: 'inherit'
+  });
 });
