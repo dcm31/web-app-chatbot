@@ -3,7 +3,7 @@
   "name": "angular-kickstart",
   "email": "dev@entercastle.com",
   "url": "http://dev.entercastle.com",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "homepage": "https://github.com/castle-dev/angular-kickstart",
   "description": "Speed up your AngularJS development whith a great build system.",
   "license": "MIT",
