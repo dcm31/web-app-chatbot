@@ -34,6 +34,7 @@
 
   angular.module('app', [
       'ui.router',
+      'ngMaterial',
       'home',
       'getting-started',
       'common.header',
