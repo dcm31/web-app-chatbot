@@ -21,6 +21,17 @@
           }
         }
       });
+var obj = {
+        url: '/charlie',
+        views: {
+          '@': {
+            templateUrl: 'src/app/charlie/charlie.tpl.html',
+            controller: 'CharlieController as vm',
+          }
+        }
+      };
+      $stateProvider
+      .state('root.charlie',obj );
   }
 
   /**
@@ -31,8 +42,18 @@
     var home = this;
     home.data = data.data;
   }
+  /**
+   * @name  CharlieController
+   * @description Controller
+   */
+  function CharlieController() {
+    var vm = this;
+    vm.data = 'cat';
+    console.log(vm);
+  }
 
   angular.module('home', [])
     .config(config)
-    .controller('HomeCtrl', HomeCtrl);
+    .controller('HomeCtrl', HomeCtrl)
+    .controller('CharlieController', CharlieController);
 })();
