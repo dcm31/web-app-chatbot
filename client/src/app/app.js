@@ -45,6 +45,8 @@
       'common.interceptors.http',
       'templates',
       /*--YEOMAN-HOOK--*/
+	'common.directives.firstComponent',
+	'common.controllers.FirstComponentDirectiveController',
     ])
     .config(config)
     .run(run)

@@ -24,9 +24,9 @@
 
 <body>
   <div>
-    <header ui-view="header"></header>
+    <!-- header ui-view="header"></header-->
     <div ui-view class="l-page island"></div>
-    <footer ui-view="footer"></footer>
+    <!--footer ui-view="footer"></footer-->
   </div>
 
   <!-- build:js assets/js/vendor.js -->
@@ -36,10 +36,13 @@
   <script type="text/javascript" src="src/vendor/angular-messages/angular-messages.js"></script>
   <script type="text/javascript" src="src/vendor/angular-material/angular-material.js"></script>
   <script type="text/javascript" src="src/vendor/angular-ui-router/release/angular-ui-router.js"></script>
+
   <!-- endbuild -->
 
   <!-- build:js assets/js/main.js -->
   <!-- YOEMAN HOOK -->
+	<script type="text/javascript" src="tmp/common/controllers/first-component-directive-controller.js"></script>
+	<script type="text/javascript" src="tmp/common/directives/first-component.js"></script>
   <script type="text/javascript" src="tmp/app/app.js"></script>
 
   <script type="text/javascript" src="tmp/app/getting-started/getting-started.js"></script>

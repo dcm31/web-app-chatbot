@@ -5,3 +5,43 @@ https://github.com/kachunchau/smacss-boilerplate
 https://github.com/davidrapson/scss-toolkit
 */
 /*@import 'settings', 'mixins', 'base', 'helpers', 'modules/island','modules/horizontal-list', 'modules/buttons', 'layouts/page', 'states';*/
+main {
+  overflow: hidden;
+  max-width: 800px;
+  margin: auto 0;
+  align: right;
+  padding-left: 250px;
+  padding-top: 60px;
+}
+.chat {
+  font-size: 28px;
+  max-width: 600px;
+  border: 1px;
+  line-height: 35px;
+  font-family:"Georgia";
+  padding-bottom: 60px;
+}
+.z {
+  text-align: right;
+  float: right;
+  display: inline-block;
+  clear: both;
+}
+.me {
+  text-align: left;
+  float: left;
+  padding-left: 30px;
+  clear: both;
+}
+input.break{
+  width: 600px;
+  border: 0px;
+  outline: none;
+  overflow: hidden;
+  resize: none;
+  word-wrap: break-word;
+  word-break: break-word;
+  height: 80px;
+                
+  }
+
