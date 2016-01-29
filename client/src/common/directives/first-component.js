@@ -6,7 +6,6 @@
       restrict: 'E',
       templateUrl: 'src/common/partials/first-component.tpl.html',
       controller: 'FirstComponentDirectiveController',
-      controllerAs: 'vm',
       bindToController: true,
       scope: {
       },

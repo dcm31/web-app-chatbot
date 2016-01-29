@@ -21,18 +21,19 @@ main {
   font-family:"Georgia";
   padding-bottom: 60px;
 }
-.z {
-  text-align: right;
-  float: right;
-  display: inline-block;
-  clear: both;
-}
 .me {
   text-align: left;
   float: left;
   padding-left: 30px;
   clear: both;
 }
+.zee {
+  text-align: right;
+  float: right;
+  display: inline-block;
+  clear: both;
+}
+
 input.break{
   width: 600px;
   border: 0px;
@@ -41,7 +42,7 @@ input.break{
   resize: none;
   word-wrap: break-word;
   word-break: break-word;
-  height: 80px;
+//  height: 80px;
                 
   }
 

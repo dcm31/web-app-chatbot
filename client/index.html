@@ -24,8 +24,8 @@
 
 <body>
   <div>
-    <!-- header ui-view="header"></header-->
-    <div ui-view class="l-page island"></div>
+    <header ui-view="header"></header>
+    <div ui-view class="l-page island">yes this is the right index page now</div>
     <!--footer ui-view="footer"></footer-->
   </div>
 
@@ -36,17 +36,29 @@
   <script type="text/javascript" src="src/vendor/angular-messages/angular-messages.js"></script>
   <script type="text/javascript" src="src/vendor/angular-material/angular-material.js"></script>
   <script type="text/javascript" src="src/vendor/angular-ui-router/release/angular-ui-router.js"></script>
+  <script type="text/javascript" src="src/vendor/firebase/firebase.js"></script>
+  <script type="text/javascript" src="src/vendor/angularfire/dist/angularfire.js"></script>
+
 
   <!-- endbuild -->
 
   <!-- build:js assets/js/main.js -->
   <!-- YOEMAN HOOK -->
+	<script type="text/javascript" src="tmp/common/factories/brain.js"></script>
+	<script type="text/javascript" src="tmp/common/factories/messages.js"></script>
+	<script type="text/javascript" src="tmp/common/factories/users.js"></script>
+	<script type="text/javascript" src="tmp/common/factories/view.js"></script>
+	<script type="text/javascript" src="tmp/common/factories/auth.js"></script>
+	<script type="text/javascript" src="tmp/common/factories/is-anonymous-service.js"></script>
+	<script type="text/javascript" src="tmp/common/factories/tester.js"></script>
 	<script type="text/javascript" src="tmp/common/controllers/first-component-directive-controller.js"></script>
 	<script type="text/javascript" src="tmp/common/directives/first-component.js"></script>
   <script type="text/javascript" src="tmp/app/app.js"></script>
 
   <script type="text/javascript" src="tmp/app/getting-started/getting-started.js"></script>
   <script type="text/javascript" src="tmp/app/home/home.js"></script>
+
+  <script type="text/javascript" src="tmp/app/home/auth/auth.service.js"></script>
 
   <script type="text/javascript" src="tmp/common/directives/version.js"></script>
   <script type="text/javascript" src="tmp/common/interceptors/httpInterceptor.js"></script>

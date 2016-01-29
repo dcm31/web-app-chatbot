@@ -2,7 +2,6 @@
   'use strict';
 
   function FirstComponentDirectiveController () {
-    var vm = this;
 
   }
 
