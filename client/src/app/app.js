@@ -52,10 +52,16 @@
                 return messages.addZeeMessage(vm.uid, category +' added');
               });
             }
-        else{
-          console.log(Users.sumTimestampTypes(vm.uid, 'water', brain.getDate(Date.now()))); 
+        else if (data.$value.includes('today')){
+
+          var otherCategory = data.$value.replace(' today','');
+          Users.sumTimestampTypes(vm.uid, otherCategory, brain.getDate(Date.now())).then(function(value){
+            messages.addZeeMessage(vm.uid, value +' '+ otherCategory);
+          }); 
  
-          return messages.addZeeMessage(vm.uid, Users.sumTimestampTypes(vm.uid, 'water', brain.getDate(Date.now())));
+        }
+        else{
+          messages.addZeeMessage(vm.uid, 'I am at a loss for words');
         }
       });
     };

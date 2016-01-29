@@ -33,14 +33,15 @@
         sumTimestampTypes(uid, type, startDate, endDate){
           var timestamps = $firebaseArray(getRefBelowUser(uid, 'timestamps'));
             var count = 0;
-            timestamps.$loaded().then(function(){
+            return timestamps.$loaded().then(function(){
+              console.log('count is in here as ', count);
             if (typeof endDate === 'undefined'){
               endDate = startDate;
             }
             for(var i = 0; i < timestamps.length; i++){
-              console.log(timestamps[i].timestamp);
               if(timestamps[i].type === type && startDate <= brain.getDate(timestamps[i].timestamp) && endDate >= brain.getDate(timestamps[i].timestamp)){
                 count = count + 1;
+                console.log(count);
               }
             }
             return count;
