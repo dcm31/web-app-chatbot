@@ -1,5 +1,8 @@
 <main>
-<div class="chat" ng-repeat='message in vm.messagesList'><div class="ng-class: message.sender;"><div class="ng-class: 'me';">{{message.body}}</div></div></div>
+<div class="chat" ng-repeat='message in vm.messagesList'><div class="ng-class: message.sender;"><div class="ng-class: 'me';">{{message.body}}</div></div>
+</div>
+<ng-show="vm.needPlot" id="tester" style="width:600px;height:250px;"></div>
+{{vm.needPlot}}
 <form  ng-submit="vm.submitter(vm.uid, vm.message);">
   <input class="chat me break" ng-model="vm.message" autofocus></input>
 </form>
