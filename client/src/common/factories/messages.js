@@ -29,7 +29,7 @@
     addUserMessage: function (uid, message) {
         var messagesRef = new Firebase(Users.getUserRef(uid)+ '/' + 'messages');
         var messagesList = $firebaseArray(messagesRef);
-        console.log('messages ref is ' , String(messagesRef));
+//        console.log('messages ref is ' , String(messagesRef));
 
         return messagesList.$add({
 

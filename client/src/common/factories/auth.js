@@ -5,20 +5,19 @@
    * @name  auth
    * @description Factory
    */
-  function auth (messages, $firebaseAuth, FirebaseUrl, Users, $firebaseObject, $firebaseArray) {
+  function auth (messages, $firebaseAuth, FirebaseUrl, Users) {
 
     var ref = new Firebase(FirebaseUrl);
-    var authObj = $firebaseAuth(ref);
+    var innerAuthObj = $firebaseAuth(ref);
   
     return {
 
       login: function(){
 
 
-        console.log(authObj.$getAuth());
-        if(authObj.$getAuth() === null){
+        if(innerAuthObj.$getAuth() === null){
 
-             return authObj.$authAnonymously().then(function(authData) {
+             return innerAuthObj.$authAnonymously().then(function(authData) {
             console.log(authData);
             return authData.uid;
           }).then(function(uid){
@@ -30,17 +29,15 @@
 
         }
         else {
-          var authData = authObj.$getAuth();
-          console.log('outside of promise');
-          var authPromise = new Promise( function(resolve, reject){
-            console.log('inside of promise');
+          var authData = innerAuthObj.$getAuth();
+          var authPromise = new Promise( function(resolve){
             resolve([messages.getMessagesRef(authData.uid), authData.uid]);
           });
           return authPromise;
         }
       },
       user: {email:'', password:''},
-      authObj: {authObj}
+      authObj: innerAuthObj 
     };
     
    /* 

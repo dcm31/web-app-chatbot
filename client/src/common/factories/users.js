@@ -10,7 +10,6 @@
     var usersRef = new Firebase(FirebaseUrl+'users');
     var innerUsersList =  $firebaseArray(usersRef);
     var innerGetUserRef = function(uid){
-      console.log(usersRef.child(uid));
       return usersRef.child(uid);
     };
     var getRefBelowUser = function(uid, categoryName){
@@ -23,7 +22,7 @@
         if (typeof endDate === 'undefined'){
           endDate = startDate;
         }
-        for(var i = 0; i < timestamps.length; i++){
+        for(var i = 0; i < timestamps.length; i += 1){
           if(timestamps[i].type === type && startDate <= brain.getDate(timestamps[i].timestamp) && endDate >= brain.getDate(timestamps[i].timestamp)){
             count = count + 1;
           }
@@ -57,7 +56,7 @@
           endDate = startDate;
         }
         var dateIndex = 0;
-        for(var i = 0; i < timestamps.length; i++){
+        for(var i = 0; i < timestamps.length; i += 1){
           var dateOfEvent = brain.getDate(timestamps[i].timestamp);
           if(timestamps[i].type === type && startDate <= dateOfEvent && endDate >= dateOfEvent)  
             { 
@@ -69,7 +68,7 @@
               if(dates.slice(-1)[0] !== dateOfEvent)
                 {
                   dates.push(dateOfEvent);
-                  dateIndex++;
+                  dateIndex += 1;
                   dailyTotal[dateIndex] = 1;
                   cumulative[dateIndex] = cumulative[dateIndex - 1];
                   
@@ -102,7 +101,7 @@
           endDate = startDate;
         }
         var dateIndex = 0;
-        for(var i = 0; i < timestamps.length; i++){
+        for(var i = 0; i < timestamps.length; i += 1){
           var dateOfEvent = brain.getDate(timestamps[i].timestamp);
           if(timestamps[i].type === type && startDate <= dateOfEvent && endDate >= dateOfEvent)  
             { 
@@ -114,7 +113,7 @@
               if(dates.slice(-1)[0] !== dateOfEvent)
                 {
                   dates.push(dateOfEvent);
-                  dateIndex++;
+                  dateIndex += 1;
                   dailyTotal[dateIndex] = 1;
                   cumulative[dateIndex] = cumulative[dateIndex - 1];
                   
@@ -138,20 +137,14 @@
 
         },
 
-        addTimestamp(uid, type){
+        addTimestamp: function(uid, type){
           var timestamps = $firebaseArray(getRefBelowUser(uid, 'timestamps'));
-          timestamps.$loaded(function(data){
+          timestamps.$loaded(function(){
             console.log('length: ', timestamps.length);
-            for(var i = 0; i< timestamps.length; i++){
+            for(var i = 0; i< timestamps.length; i += 1){
              console.log(timestamps[i].type);
             }
-            for(var time in timestamps){
-              console.log(time);
-            }
-                
           });
-            
-          
           return timestamps.$add({
             timestamp: Firebase.ServerValue.TIMESTAMP,
             type: type
