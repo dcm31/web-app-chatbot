@@ -36,7 +36,9 @@
       
       messageBodyObject.$loaded().then(function(data){
         vm.needPlot = false;
-        if (data.$value.includes('add')){
+        var lastUserMessage = data.$value;
+        var numberOfWordsInMessage = lastUserMessage.split(' ').length;
+        if (numberOfWordsInMessage === 2 && lastUserMessage.includes('add')){
           var category = data.$value.replace('add ','');
           return Users.addTimestamp(vm.uid, category).then(function(){
                 return messages.addZeeMessage(vm.uid, category +' added');
