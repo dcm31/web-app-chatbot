@@ -20,7 +20,7 @@
       );
   }
 
-  function MainCtrl($firebaseObject, $log, Auth, $firebaseArray, Users, messages, brain) {
+  function MainCtrl($http, $firebaseObject, $log, Auth, $firebaseArray, Users, messages, brain) {
     var vm = this;
     vm.message = '';
     vm.needPlot = false;
@@ -88,9 +88,34 @@
           });
           }
         }
-        
+        else if(lastUserMessage.includes('github issues')){
+
+         $http({
+             method: 'GET',
+               url: 'https://www.kimonolabs.com/api/5axqzhhm?kimmodify=1?apikey=hQyUIsOdhJ88Z0J7IQc5UHcn9C5e9nOL'
+               
+         }).then(function successCallback(response) {
+               // this callback will be called asynchronously
+           //     // when the response is available
+           console.log(response.data.results.collection1);
+           response.data.results.collection1.forEach(function(issueObj){
+             
+             messages.addZeeMessage(vm.uid, issueObj.issueNumber + '. ' + issueObj.issue.text);
+             
+           });
+         }, function errorCallback(response) {
+               // called asynchronously if an error occurs
+           //     // or server returns response with an error status.
+           //       
+         }); 
+            // called asynchronously if an error occurs
+        // k
+        //     // or server returns response with an error status.
+        //       
+        }
         else{
-          messages.addZeeMessage(vm.uid, 'I am at a loss for words');
+
+                     messages.addZeeMessage(vm.uid, 'I am at a loss for words');
         }
         
     
@@ -109,6 +134,7 @@
       vm.uid = loginInfo[1];
       vm.messagesList = $firebaseArray(vm.messageString);
 
+      
 
     }); 
   }
