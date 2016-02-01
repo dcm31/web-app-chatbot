@@ -115,7 +115,7 @@
         }
         else{
 
-                     messages.addZeeMessage(vm.uid, 'I am at a loss for words');
+                     messages.addZeeMessage(vm.uid, 'Mhm');
         }
         
     
