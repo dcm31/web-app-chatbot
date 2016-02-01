@@ -23,7 +23,7 @@
   function MainCtrl($http, $firebaseObject, $log, Auth, $firebaseArray, Users, messages, brain) {
     var vm = this;
     vm.message = '';
-    vm.needPlot = false;
+    vm.needPlot = true;
     vm.addUserMessage = function(uid, message){
 
       vm.message='';
@@ -35,7 +35,6 @@
       var messageBodyObject = $firebaseObject(messageBodyRef);
       
       messageBodyObject.$loaded().then(function(data){
-        vm.needPlot = false;
         var lastUserMessage = data.$value;
         var numberOfWordsInMessage = lastUserMessage.split(' ').length;
         if (numberOfWordsInMessage === 2 && lastUserMessage.includes('add')){
