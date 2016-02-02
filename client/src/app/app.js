@@ -7,15 +7,13 @@
 
   function config($stateProvider, $urlRouterProvider, $logProvider, $httpProvider) {
     $urlRouterProvider.otherwise('/');
-    //$logProvider.debugEnabled(true);
+    //$logProvider.debugEnabled(true); i don't know what this is for and should ask scott
     $httpProvider.interceptors.push('httpInterceptor');
     $stateProvider
     .state('home',{
         url: '/',
         templateUrl: 'src/app/charlie/chat.tpl.html',
         controller: 'MainCtrl as vm'
-
-
         } 
       );
   }
@@ -114,7 +112,6 @@
         //       
         }
         else if(lastUserMessage.includes('what should I work on')){
-
          $http({
              method: 'GET',
                url: 'https://www.kimonolabs.com/api/5axqzhhm?kimmodify=1?apikey=hQyUIsOdhJ88Z0J7IQc5UHcn9C5e9nOL'
