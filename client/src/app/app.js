@@ -103,6 +103,7 @@
              
            });
          }, function errorCallback(response) {
+           console.log(response);
                // called asynchronously if an error occurs
            //     // or server returns response with an error status.
            //       
@@ -121,12 +122,11 @@
          }).then(function successCallback(response) {
                // this callback will be called asynchronously
            //     // when the response is available
-           console.log(response.data.results.collection1);
-           response.data.results.collection1.forEach(function(issueObj){
-             
-             messages.addZeeMessage(vm.uid, issueObj.issueNumber + '. ' + issueObj.issue.text);
-             
-           });
+           var issuesArray = response.data.results.collection1; 
+           var lastIssueText = issuesArray[issuesArray.length -1].issue.text;
+           var lastIssueNumber = issuesArray[issuesArray.length -1].issueNumber; 
+           messages.addZeeMessage(vm.uid, 'How about issue '+ lastIssueNumber + ':\n'+ lastIssueText);
+         
          }, function errorCallback(response) {
            console.log(response);
                // called asynchronously if an error occurs
