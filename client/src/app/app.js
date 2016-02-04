@@ -14,7 +14,7 @@
         url: '/',
         templateUrl: 'src/app/charlie/chat.tpl.html',
         controller: 'MainCtrl as vm'
-        } 
+       } 
       );
   }
 
@@ -28,6 +28,8 @@
       return messages.addUserMessage(uid,message);
     };
     vm.respond = function(messageRef){
+      brain.respond(vm.uid, messageRef);
+    };/*function(messageRef){
       
       var messageBodyRef = messageRef.child('body');
       var messageBodyObject = $firebaseObject(messageBodyRef);
@@ -142,7 +144,7 @@
         
     
     });
-    };
+    };*/
     vm.submitter = function(uid, message){
       return vm.addUserMessage(uid, message).then(function(messageRef){
         return vm.respond(messageRef);
@@ -179,6 +181,7 @@
       'common.interceptors.http',
       'templates',
       /*--YEOMAN-HOOK--*/
+	'common.factories.dates',
 	'common.factories.brain',
 	'common.factories.messages',
 	'common.factories.users',

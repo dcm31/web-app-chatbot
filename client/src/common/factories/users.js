@@ -5,7 +5,7 @@
    * @name  users
     @description Factory
    */
-  function Users ($firebaseArray, $firebaseObject, FirebaseUrl, brain) {
+  function Users ($firebaseArray, $firebaseObject, FirebaseUrl, dates) {
     
     var usersRef = new Firebase(FirebaseUrl+'users');
     var innerUsersList =  $firebaseArray(usersRef);
@@ -23,7 +23,7 @@
           endDate = startDate;
         }
         for(var i = 0; i < timestamps.length; i += 1){
-          if(timestamps[i].type === type && startDate <= brain.getDate(timestamps[i].timestamp) && endDate >= brain.getDate(timestamps[i].timestamp)){
+          if(timestamps[i].type === type && startDate <= dates.getDate(timestamps[i].timestamp) && endDate >= dates.getDate(timestamps[i].timestamp)){
             count = count + 1;
           }
         }
@@ -57,7 +57,7 @@
         }
         var dateIndex = 0;
         for(var i = 0; i < timestamps.length; i += 1){
-          var dateOfEvent = brain.getDate(timestamps[i].timestamp);
+          var dateOfEvent = dates.getDate(timestamps[i].timestamp);
           if(timestamps[i].type === type && startDate <= dateOfEvent && endDate >= dateOfEvent)  
             { 
               if(dates.length === 0){
@@ -102,7 +102,7 @@
         }
         var dateIndex = 0;
         for(var i = 0; i < timestamps.length; i += 1){
-          var dateOfEvent = brain.getDate(timestamps[i].timestamp);
+          var dateOfEvent = dates.getDate(timestamps[i].timestamp);
           if(timestamps[i].type === type && startDate <= dateOfEvent && endDate >= dateOfEvent)  
             { 
               if(dates.length === 0){
