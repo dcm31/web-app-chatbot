@@ -3,7 +3,8 @@
     "angular": false,
     "Firebase": true,
     "Promise": true,
-    "Plotly": true
+    "Plotly": true,
+    "async": true
   },
   "node": true,
   "browser": true,
