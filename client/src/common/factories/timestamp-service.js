@@ -5,14 +5,8 @@
    * @name  timestampService
    * @description Factory
    */
-  function timestampService (FirebaseUrl, $firebaseArray, dates) {
-    var usersRef = new Firebase(FirebaseUrl+'users');
-    var innerGetUserRef = function(uid){
-      return usersRef.child(uid);
-    };
-    var getRefBelowUser = function(uid, categoryName){
-      return new Firebase(innerGetUserRef(uid)+ '/' + categoryName); 
-    };
+  function timestampService (FirebaseUrl, $firebaseArray, dates, Users) {
+    var getRefBelowUser = Users.getRefBelowUser; 
     var innerSumTimestampTypes = function(uid, type, startDate, endDate){
       var timestamps = $firebaseArray(getRefBelowUser(uid, 'timestamps'));
       var count = 0;
