@@ -26,7 +26,6 @@
           }).catch(function(error){
             console.log(error);
           });
-
         }
         else {
           var authData = innerAuthObj.$getAuth();

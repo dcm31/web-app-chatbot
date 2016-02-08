@@ -20,6 +20,7 @@
 
   function MainCtrl($http, $firebaseObject, $log, Auth, $firebaseArray, Users, messages, responseService) {
     var vm = this;
+    vm.textClass = 'chat';
     vm.message = '';
     vm.needPlot = true;
     vm.addUserMessage = function(uid, message){
@@ -28,11 +29,21 @@
       return messages.addUserMessage(uid,message);
     };
     vm.respond = function(messageRef){
-      responseService.respond(vm.uid, messageRef);
+      return responseService.respond(vm.uid, messageRef);
     };
     vm.submitter = function(uid, message){
       return vm.addUserMessage(uid, message).then(function(messageRef){
-        return vm.respond(messageRef);
+        return vm.respond(messageRef).then(function(){
+          var hideTextObj = $firebaseObject(Users.getRefBelowUser(uid, 'textHidden'));
+          return hideTextObj.$loaded().then(function(innerObj){
+            if(innerObj.$value === true){
+              vm.textClass = 'hidden-chat';
+            }
+            else
+              {vm.textClass = 'chat';}
+          });
+
+        });
     });
     };
 

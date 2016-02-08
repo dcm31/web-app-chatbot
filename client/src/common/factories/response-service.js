@@ -10,7 +10,7 @@
       respond: function(uid, messageRef){
         var messageBodyRef = messageRef.child('body');
         var messageBodyObject = $firebaseObject(messageBodyRef);
-        messageBodyObject.$loaded().then(function(data){
+        return messageBodyObject.$loaded().then(function(data){
           var lastUserMessage = data.$value;
           var numberOfWordsInMessage = lastUserMessage.split(' ').length;
           if (numberOfWordsInMessage === 2 && lastUserMessage.includes('add')){
@@ -22,13 +22,13 @@
           else if (data.$value.includes('today')){
             var otherCategory = data.$value.replace(' today','');
             timestampService.sumTimestampTypes(uid, otherCategory, dates.getDate(Date.now())).then(function(value){
-              messages.addZeeMessage(uid, value +' '+ otherCategory);
+              return messages.addZeeMessage(uid, value +' '+ otherCategory);
             }); 
           }
           else if (data.$value.includes('yesterday')){
             var thirdCategory = data.$value.replace(' yesterday','');
             timestampService.sumTimestampTypes(uid, thirdCategory, dates.getDate(dates.getYesterday())).then(function(value){
-              messages.addZeeMessage(uid, value +' '+ thirdCategory);
+             return messages.addZeeMessage(uid, value +' '+ thirdCategory);
             }); 
           }
           else if(data.$value.includes('plot')){
@@ -62,7 +62,7 @@
               // this callback will be called asynchronously when the response is available
               console.log(response.data.results.collection1);
               response.data.results.collection1.forEach(function(issueObj){
-                messages.addZeeMessage(uid, issueObj.issueNumber + '. ' + issueObj.issue.text);
+                return messages.addZeeMessage(uid, issueObj.issueNumber + '. ' + issueObj.issue.text);
               });
             }, function errorCallback(response) {
               console.log(response);
@@ -80,15 +80,26 @@
               var issuesArray = response.data.results.collection1; 
               var lastIssueText = issuesArray[issuesArray.length -1].issue.text;
               var lastIssueNumber = issuesArray[issuesArray.length -1].issueNumber; 
-              messages.addZeeMessage(uid, 'How about issue '+ lastIssueNumber + ':\n'+ lastIssueText);
+              return messages.addZeeMessage(uid, 'How about issue '+ lastIssueNumber + ':\n'+ lastIssueText);
             }, function errorCallback(response) {
               console.log(response);
               // called asynchronously if an error occurs or server returns response with an error status.
             }); 
             // called asynchronously if an error occurs or server returns response with an error status.
           }
+          else if(lastUserMessage.includes('hide text')){
+            return Users.setTextHiddenness(uid, true).then(function(){
+              return messages.addZeeMessage(uid, 'text hidden!');
+            });
+          }
+          else if(lastUserMessage.includes('show text')){
+            return Users.setTextHiddenness(uid, false).then(function(){
+              return messages.addZeeMessage(uid, 'text visible again!');
+            });
+          }
           else{
-            messages.addZeeMessage(uid, 'Mhm');
+
+            return messages.addZeeMessage(uid, 'Mhm');
           }
         });
       }

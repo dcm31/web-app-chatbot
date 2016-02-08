@@ -25,7 +25,15 @@
       usersList: function(){
         return innerUsersList; 
       },
-      getRefBelowUser: innerGetRefBelowUser
+      getRefBelowUser: innerGetRefBelowUser,
+      setTextHiddenness: function(uid, hideText){
+        var hideTextObj = $firebaseObject(innerGetRefBelowUser(uid, 'textHidden'));
+        return hideTextObj.$loaded().then(function(innerObj){
+          innerObj.$value = hideText;
+          return innerObj.$save();
+        });
+        
+      }
     };
     return usersObject;
   }
