@@ -2,8 +2,8 @@
 <div class="ng-class: vm.textClass;" ng-repeat='message in vm.messagesList'><div class="ng-class: message.sender;"><div class="ng-class: 'me';">{{message.body}}</div></div>
 </div>
 <div ng-if="vm.needPlot" id="tester" style="width:600px;height:250px;"></div>
-<form  ng-submit="vm.submitter(vm.uid, vm.message);">
-  <input class="ng-class: vm.textClass; me break" ng-model="vm.message" autofocus></input>
+<form id="form-field"  ng-submit="vm.submitter(vm.uid, vm.message);">
+  <input autocomplete="off" spellcheck="false" id="input-field" ng-keypress="vm.evalHeight()" ng-style="{'height': vm.evalHeight() +'px'}" class="ng-class: vm.textClass; me break" ng-model="vm.message" autofocus>
 </form>
 </main>
 

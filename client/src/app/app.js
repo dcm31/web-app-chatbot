@@ -20,12 +20,24 @@
 
   function MainCtrl($http, $firebaseObject, $log, Auth, $firebaseArray, Users, messages, responseService) {
     var vm = this;
+    vm.inputHeight = 0;//document.getElementById('input-field').scrollHeight;
+    vm.evalHeight = function(){
+      //console.log(document.getElementById('input-field').clientHeight,document.getElementById('input-field').scrollHeight);
+
+      if(document.getElementById('input-field').clientHeight  < document.getElementById('input-field').scrollHeight)
+        {
+       vm.inputHeight = document.getElementById('input-field').scrollHeight;
+      //console.log(vm.inputHeight);
+        }
+            return vm.inputHeight;
+    };
     vm.textClass = 'chat';
     vm.message = '';
     vm.needPlot = true;
     vm.addUserMessage = function(uid, message){
 
       vm.message='';
+      vm.inputHeight = 0;
       return messages.addUserMessage(uid,message);
     };
     vm.respond = function(messageRef){
