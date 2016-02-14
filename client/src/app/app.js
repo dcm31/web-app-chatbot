@@ -31,6 +31,7 @@
         }
             return vm.inputHeight;
     };
+    vm.timeNow = Date.now();
     vm.textClass = 'chat';
     vm.message = '';
     vm.needPlot = true;

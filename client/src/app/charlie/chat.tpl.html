@@ -1,5 +1,5 @@
 <main>
-<div class="ng-class: vm.textClass;" ng-repeat='message in vm.messagesList'><div class="ng-class: message.sender;"><div class="ng-class: 'me';">{{message.body}}</div></div>
+<div class="ng-class: vm.textClass;" ng-if="message.timestamp> vm.timeNow - 86400000" ng-repeat='message in vm.messagesList'><div class="ng-class: message.sender;"><div class="ng-class: 'me';">{{message.body}}{{ vm.needPlot }}</div></div>
 </div>
 <div ng-if="vm.needPlot" id="tester" style="width:600px;height:250px;"></div>
 <form id="form-field"  ng-submit="vm.submitter(vm.uid, vm.message);">
