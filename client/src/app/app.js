@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var natural = require("natural");
+  var natural = require('natural');
   angular.element(document).ready(function() {
     angular.bootstrap(document, ['app']);
   });
@@ -19,7 +19,7 @@
       );
   }
 
-  function MainCtrl($http, $firebaseObject, $log, Auth, $firebaseArray, Users, messages, responseService) {
+  function MainCtrl($http, $firebaseObject, $log, Auth, $firebaseArray, Users, messages, responseService, tfidfService) {
     var vm = this;
     vm.inputHeight = 0;//document.getElementById('input-field').scrollHeight;
     vm.evalHeight = function(){
@@ -32,25 +32,7 @@
         }
             return vm.inputHeight;
     };
-    var TfIdf = natural.TfIdf;
-    var tfidf = new TfIdf();
-
-    tfidf.addDocument('this document is about node.');
-    tfidf.addDocument('this document is about ruby.');
-    tfidf.addDocument('this document is about ruby and node.');
-    tfidf.addDocument('this document is about node. it has node examples');
-
-    console.log('node --------------------------------');
-    tfidf.tfidfs('node', function(i, measure) {
-      console.log('document #' + i + ' is ' + measure);
-
-    });
-
-    console.log('ruby --------------------------------');
-    tfidf.tfidfs('ruby', function(i, measure) {
-      console.log('document #' + i + ' is ' + measure);
-
-    });
+   
     vm.timeNow = Date.now();
     vm.textClass = 'chat';
     vm.message = '';
@@ -84,7 +66,26 @@
       vm.messageString = loginInfo[0];
       vm.uid = loginInfo[1];
       vm.messagesList = $firebaseArray(vm.messageString);
-    }); 
+      vm.numOfOldMessages = 0;
+      vm.messagesList.$loaded().then(function(data){
+        
+        angular.forEach(vm.messagesList, function(message){
+          if(message.sender !== 'zee'){
+            tfidfService.addTfidfDoc(message.body);
+            if(message.timestamp < vm.timeNow - 86400000){
+//              tfidfService.addTodayTfidfDoc(message.body);
+              vm.numOfOldMessages += 1;
+            }
+            
+          }
+        });
+      });
+
+      tfidfService.tfidfObject.then(function(data){
+        console.log(data);
+      });
+
+    });
   }
 
   function run($log) {
@@ -106,6 +107,7 @@
       /*--YEOMAN-HOOK--*/
 	'common.factories.timestampService',
 	'common.factories.responseService',
+	'common.factories.tfidfService',
 	'common.factories.dates',
 	'common.factories.brain',
 	'common.factories.messages',

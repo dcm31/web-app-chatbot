@@ -35,6 +35,9 @@
           return authPromise;
         }
       },
+      getUid: function(){
+        return Promise.resolve(innerAuthObj.$getAuth());
+      },
       user: {email:'', password:''},
       authObj: innerAuthObj 
     };

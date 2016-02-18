@@ -5,7 +5,7 @@
    * @name  responseService
    * @description Factory
    */
-  function responseService (timestampService, Users, $http, messages, $firebaseObject, dates) {
+  function responseService (timestampService, Users, $http, messages, $firebaseObject, dates, tfidfService) {
     return {
       respond: function(uid, messageRef){
         var messageBodyRef = messageRef.child('body');
@@ -13,6 +13,7 @@
         return messageBodyObject.$loaded().then(function(data){
           var lastUserMessage = data.$value;
           var numberOfWordsInMessage = lastUserMessage.split(' ').length;
+          tfidfService.addTfidfDoc(lastUserMessage);
           if (numberOfWordsInMessage === 2 && lastUserMessage.includes('add')){
             var category = data.$value.replace('add ','');
             return timestampService.addTimestamp(uid, category).then(function(){
@@ -97,10 +98,24 @@
               return messages.addZeeMessage(uid, 'text visible again!');
             });
           }
-          else{
+          else if(lastUserMessage.includes('word of the day')){
 
-            return messages.addZeeMessage(uid, 'Mhm');
+              return tfidfService.getWordOfTheDay().then(function(wod){
+
+                console.log(wod);
+
+              return messages.addZeeMessage(uid, wod);
+              });
+
           }
+          else{
+            console.log(tfidfService.tfidfObject);
+
+            tfidfService.tfidfObject.then(function(tfidfObj){
+
+            return messages.addZeeMessage(uid,  tfidfService.getKeyword(lastUserMessage, tfidfObj));
+              });
+            }
         });
       }
       };
